@@ -1,0 +1,76 @@
+% Instinct Wild
+% 2022-01-31
+% 该样式包参考了lshort-zh-cn-style.sty的编排。
+\ProvidesPackage{localstyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% localstyle 调用的宏包
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% ctex 宏包 2.2(2015/06/24) 或以上版本
+% ctex 宏包的字号设定会让许多固定字号的字体宏包报太多 warning，应当抑制
+% 中文正文字体使用 fandol
+%
+\RequirePackage[zihao=false, scheme=chinese, fontset=fandol]{ctex}[2015/06/24]
+%
+% 基本工具宏包
+%
+\RequirePackage{fontspec}            % 调用系统字体
+\RequirePackage{geometry}            % 行间距
+\RequirePackage{color}               % 设置颜色
+\RequirePackage{xcolor}              % 高级颜色
+\RequirePackage{minted}              % 代码高亮
+\RequirePackage{graphicx}            % 插图
+\RequirePackage{caption}             % 说明文字
+%
+% fontspec & xeCJK
+%
+\setmainfont{Egyptian 505}
+% minted
+%
+\setminted{fontsize=\footnotesize,baselinestretch=1}
+%\usemintedstyle{xcode}
+%
+% graphicx
+%
+\graphicspath{{figures/}}
+\renewcommand{\thefigure}{\thechapter-\arabic{figure}}
+%
+% caption
+%
+\captionsetup{font=footnotesize,skip=5pt,labelsep=period}
+%
+% 定义
+%
+\newcommand{\mytextit}[1]{{\fontspec{Atenea Egyptian Italic}#1}} % 英文斜体
+\newcommand{\myred}{\color[rgb]{0.51,0.0,0.07}}                  % 红色
+\newcommand{\boldred}{\color[rgb]{0.51,0.094,0.1}}               % 深红色
+\newcommand{\redtxt}[1]{{\myred{#1}}}                            % 红色文本
+\newcommand{\reditxt}[1]{\redtxt{\mytextit{#1}}}                 % 红色斜体文本
+\newcommand{\boldredtxt}[1]{{\boldred{#1}}}                      % 深红色文本
+\newcommand{\mksec}[1]{\section{\boldred{#1}}}
+\newcommand{\mkpar}[1]{\par\vspace{#1ex}}
+\newcommand{\mknote}[1]{\begin{center}
+    \fbox{\begin{minipage}{37em}
+        \begin{center}
+            \textbf{{\color[gray]{0.4}{\LARGE 批注}}}
+            \begin{flushleft}
+                #1
+            \end{flushleft}
+        \end{center}
+    \end{minipage}}
+\end{center}}
+%
+% 页面细节样式
+%            
+%\setcounter{secnumdepth}{0}         % 不显示章节编号
+\setlength{\fboxsep}{1.2em}         % 水平边框Box内边距
+\setlength{\parindent}{0pt}         % 段首行缩进为0
+\linespread{1.2}                    % 行间距为1.2*1.2
+\geometry{inner=1in,outer=1.25in}   % 靠近书脊边距较小，适合书籍等双面文档
+%
+% titlepage
+%
+\title{CSAPP NOTE}
+\author{Instinct Wild}
+\date{\today}
