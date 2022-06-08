@@ -1,3 +1,23 @@
 % Instinct Wild
 % 2022-01-31
 \chapter{计算机系统漫游}
+
+\begin{minted}{C}
+    #include <stdio.h>
+    
+    int main()
+    {
+        printf("hello, world\n");
+        return 0;
+    }
+\end{minted}
+
+\smallskip
+本章，通过跟踪该hello程序的生命周期进行学习。
+
+\mksec{信息就是位+上下文}
+\begin{itemize}
+    \item hello程序的生命周期由其源程序（文件）开始，即\texttt{hello.c} 。
+    \item 源程序是由0和1组成的位\textit{bit}序列。
+    \item 8个bit一组，称为字节\textit{byte}。
+\end{itemize}
