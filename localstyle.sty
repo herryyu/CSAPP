@@ -1,6 +1,27 @@
-% INRAINBOWS
-% 2022-06-08
-% 该样式包参考了lshort-zh-cn-style.sty的编排。
+%
+%                                                      __----~~~~~~~~~~~------___
+%                                     .  .   ~~//====......          __--~ ~~
+%                     -.            \_|//     |||\\  ~~~~~~::::... /~
+%                  ___-==_       _-~o~  \/    |||  \\            _/~~-
+%          __---~~~.==~||\=_    -_--~/_-~|-   |\\   \\        _/~
+%      _-~~     .=~    |  \\-_    '-~7  /-   /  ||    \      /
+%    .~       .~       |   \\ -_    /  /-   /   ||      \   /
+%   /  ____  /         |     \\ ~-_/  /|- _/   .||       \ /
+%   |~~    ~~|--~~~~--_ \     ~==-/   | \~--===~~        .\
+%            '         ~-|      /|    |-~\~~       __--~~
+%                        |-~~-_/ |    |   ~\_   _-~            /\
+%                             /  \     \__   \/~                \__
+%                         _--~ _/ | .-~~____--~-/                  ~~==.
+%                        ((->/~   '.|||' -_|    ~~-/ ,              . _||
+%                                   -_     ~\      ~~---l__i__i__i--~~_/
+%                                   _-~-__   ~)  \--______________--~~
+%                                 //.-~~~-~_--~- |-------~~~~~~~~
+%                                        //.-~~~--\
+%                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%  INRAINBOWS
+%  2022-01-31 18:53:38
+%  该样式包参考了lshort-zh-cn-style.sty的编排。
+
 \ProvidesPackage{localstyle}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,6 +53,7 @@
 \RequirePackage{makecell}            % 表格内换行
 \RequirePackage{supertabular}        % 跨页表格
 \RequirePackage{hyperref}            % 超链接
+\RequirePackage{amsmath}             % 数学相关
 %
 %
 % hypererf
@@ -69,7 +91,7 @@
 % minted
 %
 %
-\setminted{fontsize=\footnotesize,baselinestretch=1}   % 代码字体大小，行间距
+\setminted{fontsize=\small,baselinestretch=1}   % 代码字体大小，行间距
 \usemintedstyle{friendly}
 %
 %
@@ -85,29 +107,27 @@
 \captionsetup{font=footnotesize,skip=5pt,labelsep=period}
 %
 %
+% geometry
+%
+%
+\geometry{left=1cm,right=2cm,top=2.5cm,bottom=2.5cm}
+%\geometry{inner=1in,outer=1.25in}   % 靠近书脊边距较小，适合书籍等双面文档
+%
+%
 % 定义
 %
 %
 \renewcommand{\thefigure}{\thechapter-\arabic{figure}}              % 图片编号格式指定
 \renewcommand{\thetable}{\thechapter-\arabic{table}}                % 表格编号格式指定
-\newcommand{\mkref}[2]{\hyperref[#1]{\redtxt{#2}}}                  % 创建label超链接
-\newcommand{\mkuref}[2]{\href{#1}{\redtxt{#2}}}                     % 创建url超链接
+\newcommand{\mkref}[2]{\hyperref[#1]{\bluetxt{#2}}}                 % 创建label超链接
+\newcommand{\mkuref}[2]{\href{#1}{\bluetxt{#2}}}                    % 创建url超链接
 \newcommand{\textittt}[1]{\textit{\texttt{#1}}}                     % 等宽斜体       
 \newcommand{\textbftt}[1]{\textbf{\texttt{#1}}}                     % 等宽粗体  
-\newcommand{\redtxt}[1]{{\textcolor{myred}{#1}}}                    % 红色文本
-\newcommand{\reditxt}[1]{\redtxt{\textit{#1}}}                      % 红色斜体文本
+\newcommand{\bluetxt}[1]{{\textcolor{myblue}{#1}}}                  % 蓝色文本
+\newcommand{\blueitxt}[1]{\bluetxt{\textit{#1}}}                    % 红色斜体文本
 \newcommand{\mksec}[1]{\textcolor{myblue}{\section{#1}}}            % 创建节标题
+\newcommand{\mksubsec}[1]{\textcolor{myblue}{\subsection{#1}}}      % 创建小节标题
 \newcommand{\mkpar}[1]{\par\vspace{#1ex}}                           % 增加一个垂直间隔
-\newcommand{\mknote}[1]{\begin{center}                              % 创建一个note
-    \fbox{\begin{minipage}{37em}
-        \begin{center}
-            \textbf{{\color[gray]{0.4}{\LARGE 批注}}}
-            \begin{flushleft}
-                #1
-            \end{flushleft}
-        \end{center}
-    \end{minipage}}
-\end{center}}
 %
 %
 % 页面细节样式
@@ -116,12 +136,11 @@
 \setlength{\fboxsep}{1.2em}         % 水平边框Box内边距
 \setlength{\parindent}{0pt}         % 段首行缩进为0
 \linespread{1.2}                    % 行间距为1.2*1.2
-\geometry{inner=1in,outer=1.25in}   % 靠近书脊边距较小，适合书籍等双面文档
 %
 %
 % titlepage
 %
 %
 \title{CSAPP NOTES}
-\author{INRAINBOWS PRODUCTION}
+\author{INRAINBOWS}
 \date{\today}

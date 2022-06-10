@@ -1,0 +1,162 @@
+% Instinct Wild
+% 2022-06-08
+\chapter{信息的表示和处理}\label{CHP2}
+
+我们将研究三种数字表示：
+\begin{enumerate}
+    \item \texttt{无符号}(unsigned)编码基于传统二进制，表示大于等于零的数字。
+    \item \texttt{补码}(two's-complement)编码表示有符号整数，即可以为正或负的数字。
+    \item \texttt{浮点数}(floating-point)编码表示实数的科学计数法的以2为基数的版本。
+\end{enumerate}
+
+\mksec{信息存储}
+\begin{itemize}
+    \item 大多数计算机使用\texttt{字节}(byte)，一个8bits的块作为最小内存寻址单位。
+    \item \texttt{虚拟内存}(virtual memory)，各字节由一个唯一数字表示并作为其\texttt{地址}(address)
+    \item 所有可能地址的集合称为\texttt{虚拟地址空间}(virtual address space)。
+    \item VAS的实际实现（\mkref{CHP9}{第九章}）是将DRAM、闪存、磁盘、特殊硬件与OS软件结合，为机器级程序提供一个看上去统一的字节数组。
+\end{itemize}
+
+\mksubsec{十六进制表示法}
+\begin{itemize}
+    \item byte的值域（二进制）：$00000000_{2} \sim 11111111_{2}$ ；十进制下为$0_{10} \sim 255_{10}$ 。
+    \item 二进制太冗长，十进制与位模式转换比较麻烦。替代方案为\texttt{十六进制}(hexadecimal)，简写hex。
+    \item hex使用 '0' $\sim$ '9' 与字符 'A' $\sim$ 'F' 表示16个值。一个hex数字对应四个二进制位。
+    \item byte的值域（十六进制）：$00_{16} \sim FF_{16}$
+    \item C语言中hex值以\texttt{0x}/\texttt{0X}开头； 'A' $\sim$ 'F' 非大小写敏感。
+    \item binary转hex：每4位一组转一个hex数字。若binary的位模式不是4的倍数，将最左边一组用0补足。
+\end{itemize}
+
+\bluetxt{练习题 2.1}详见实物书Page 26。该题涉及技巧------\underline{设值$x=2^n$，则将$x$转为hex形式的方法}：
+\begin{itemize}
+    \item 首先清楚$x$的binary表示为1后面跟$n$个0，且$0_{16} \Leftrightarrow 0000_{2}$。
+    \item $n \div 4 = j \cdot\cdot\cdot i{\quad}(0 \geq i \geq 3)$ 。则目标hex形式为：$2^i$开头且后跟$j$个$0$ 。
+    \item 比如$x=2048=2^{11}$，易知$j=2, i=3$，则$x$的hex表示为\texttt{0x800}
+\end{itemize}
+
+\bluetxt{练习题 2.2}详见实物书Page 26。该题涉及技巧------\underline{dec与hex之间的互转}：
+\begin{itemize}
+    \item dec数$x$转hex：将被除数$x$与除数$16$应用于短除法，结果为余数从下到上的排列表示。
+    \item hex转dec：用hex的各位数乘以相应16的幂，幂的次数从$0$开始从右到左递增。
+\end{itemize}
+
+\mksubsec{字数据大小}
+\begin{itemize}
+    \item 每台计算机均有一个\texttt{字长}(word size)，其为指针的标称大小(nominal size)。
+    \item 虚拟地址以这样的一个word进行编码。
+    \item 若机器的word size为$w$ bits，则其虚拟内存地址范围为$0 \sim 2^{w}-1$，程序最多访问$2^{w}$个bytes。
+\end{itemize}
+
+\textbf{基础知识：1Bytes = 8Bits ; 1KB = 1024Bytes ; 1MB = 1024KBs ; 1GB = 1024MBs ; 1TB = 1024GBs} \\
+\textbf{拓展：\qquad 1GB = 2\^{}30Bytes ; 1MB = 2\^{}20Bytes ; 1KB = 2\^{}10Bytes}
+
+\begin{itemize}
+    \item 32位机器的虚拟地址空间最高能访问$2^{32}$bytes，即4GB，也即刚超过$4 \times 10^9$bytes。而64位机器为16EB，约
+    $1.84 \times 10^{19}$bytes。
+    \item 作为向后兼容，多数64位机器可运行32位程序，反过来则不行。
+    \item \underline{C的数据类型\texttt{char}在直觉上是用来存储单个字符的，但也常被用来存储整数值}。
+    \item 程序员应力图使程序具备可移植性，其中一方面便是让程序对不同数据类型的确切大小不敏感。
+\end{itemize}
+
+\mksubsec{寻址和字节顺序}
+\begin{itemize}
+    \item \texttt{小端法}(little endian)：在内存中按从最低到最高有效字节的顺序存储对象。
+    \item \texttt{大端法}(big endian)：与小端法相反。
+\end{itemize}
+
+打个比方，\texttt{x}类型为\texttt{int}，其值为\texttt{0x01234567}，位于地址\texttt{0x100}。以下是两种表示法的区别：
+
+\smallskip
+\begin{figure}[ht]
+    \centering
+    \includegraphics[scale=0.35]{2-endian}
+\end{figure}
+
+\mksubsec{表示字符串}
+详见实物书Page 34。
+
+\mksubsec{表示代码}
+详见实物书Page 35。
+
+\mksubsec{布尔代数简介}
+\bluetxt{网络旁注：}关于布尔代数和布尔环的更多内容
+
+\medskip
+\begin{itemize}
+    \item 考虑长度为$w$的位向量上的\^{}、\&和\textasciitilde 运算，得到一种叫\texttt{布尔环}(Boolean ring)的数学形式。
+    \item 整数运算中一个属性是每个值$x$均有一个\texttt{加法逆元}(additive inverse)$-x$，使得$x+(-x)=0$。Boolean ring中对应的运算为\^{}，
+    此时每个元素的加法逆元是其自身。
+    \item 也就是说，对任何值a，a \^{} a = 0。这里的0表示全0的位向量。因此会有(a \^{} b) \^{} a = b。
+\end{itemize}
+
+\mksubsec{C语言中的位级运算}
+
+\bluetxt{练习题 2.10}详见实物书Page 38。（该题涉及技巧------\underline{利用Boolean ring逆元运算达到值交换目的}）
+
+\medskip
+位级运算常见用法是实现\texttt{掩码运算}，掩码是一个位模式，表示从一个字中选出的位集合。\\
+比如，掩码\texttt{0xFF}表示一个字的低位字节。比如\texttt{x=0x89ABCDEF}的运算结果为\texttt{0x000000EF}。
+
+\medskip
+\bluetxt{练习题 2.12}详见实物书Page 39。该题涉及技巧------\underline{掩码运算}
+
+\smallskip
+\bluetxt{练习题 2.13}详见实物书Page 39。该题涉及技巧------\underline{掩码运算}
+
+\mksubsec{C语言中的逻辑运算}
+\begin{itemize}
+    \item C语言逻辑运算符\texttt{||}、\texttt{\&\&}、{!}，分别对应命题逻辑中的OR、AND、NOT。
+    \item 逻辑运算和位运算本质区别：
+        \begin{enumerate}
+            \item 逻辑运算中，所有非零值均视为TRUE，零自身为FALSE。
+            \item 若第一个值就能确定表达式结果，则逻辑运算符会无视第二个值。比如\texttt{a\&\&5/a}不会发生零除错误，\texttt{p\&\&*p++}不会
+                  导致空指针引用。
+        \end{enumerate}
+    \item TRUE与FALSE对应返回值分别为1与0。
+\end{itemize}
+
+\mksubsec{C语言中的移位运算}
+C语言提供一组\texttt{移位}运算。
+
+\medskip
+\begin{itemize}
+    \item 左移运算\texttt{x<<k}为左移$k$位，丢弃最高的$k$位，在右端补$k$个0。
+    \item 右移运算分\texttt{逻辑右移}和\texttt{算术右移}：
+        \begin{enumerate}
+            \item 逻辑右移在左端补$k$个0.
+            \item 算术右移在左端补$k$个最高有效位的值。
+        \end{enumerate}
+    \item 假设位模式长度为$w$，$k$值一般介于$[0, w-1]$。
+\end{itemize}
+
+C未明确定义对signed数使用哪种右移，不过大多编译器的实现为默认算术右移。对于unsigned，右移只能是逻辑的。
+
+\mksec{整数表示}
+实物书Page 42列出了CSAPP用于精确定义和描述计算机编码方式和操作整数的术语。
+
+\mksubsec{整型数据类型}
+详见实物书Page 42。
+
+\mksubsec{无符号数的编码}
+设一个整数数据类型有$w$位，以及位向量 $\vec{x}=[x_{w-1},x_{w-2},\dots,x_0]$。
+
+\medskip
+\begin{quote}
+    \textbf{原理}：无符号数编码定义（$\doteq$ 表示左被定义为右）
+    \begin{equation}
+        B2U_{w}(\vec{x})\doteq \sum_{i=0}^{w-1} x_{i}2^{i} 
+    \end{equation}
+\end{quote}
+
+举个例子：$B2U_{4}([1011]) = 1 \cdot 2^3 + 0 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0 = 11$ 。\\
+
+此时$w$位可表示值范围为：
+\begin{itemize}
+    \item 最小值：[0000]，即整数值0。
+    \item 最大值：[1111]，即整数值 $UMax_w \doteq \sum_{i=0}^{w-1} 2_i = 2^w - 1$ ，令$w=4$，则$UMax_4 = B2U_{4}([1111])=15$ 。
+\end{itemize}
+
+\begin{quote}
+    \textbf{原理}：无符号数编码的唯一性 \\
+    每个介于$0 \sim 2^w - 1$的数均有一个唯一对应的$w$位编码。
+\end{quote}
