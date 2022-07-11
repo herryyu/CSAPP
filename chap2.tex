@@ -67,7 +67,7 @@
     \item 若机器的word size为$w$ bits，则其虚拟内存地址范围为$0 \sim 2^{w}-1$，程序最多访问$2^{w}$个bytes。
 \end{itemize}
 
-\textbf{基础知识：1Bytes = 8Bits ; 1KB = 1024Bytes ; 1MB = 1024KBs ; 1GB = 1024MBs ; 1TB = 1024GBs} \\
+\textbf{基础知识：1Byte = 8Bits ; 1KB = 1024Bytes ; 1MB = 1024KBs ; 1GB = 1024MBs ; 1TB = 1024GBs} \\
 \textbf{拓展：\qquad 1GB = 2\^{}30Bytes ; 1MB = 2\^{}20Bytes ; 1KB = 2\^{}10Bytes}
 
 \begin{itemize}
@@ -115,7 +115,7 @@
 
 \medskip
 位级运算常见用法是实现\texttt{掩码运算}，掩码是一个位模式，表示从一个字中选出的位集合。\\
-比如，掩码\texttt{0xFF}表示一个字的低位字节。比如\texttt{x=0x89ABCDEF}的运算结果为\texttt{0x000000EF}。
+比如，掩码\texttt{0xFF}表示一个字的低位字节。比如\texttt{x=0x89ABCDEF}与该掩码的运算结果为\texttt{0x000000EF}。
 
 \medskip
 \bluetxt{练习题 2.12}详见实物书Page 39。该题涉及技巧------\underline{掩码运算}
@@ -172,11 +172,40 @@ C未明确定义对signed数使用哪种右移，不过大多编译器的实现�
 
 此时$w$位可表示值范围为：
 \begin{itemize}
-    \item 最小值：[0000]，即整数值0。
-    \item 最大值：[1111]，即整数值 $UMax_w \doteq \sum_{i=0}^{w-1} 2_i = 2^w - 1$ ，令$w=4$，则$UMax_4 = B2U_{4}([1111])=15$ 。
+    \item 最小值：[00...0]，即整数值0。
+    \item 最大值：[11...1]，即整数值 $UMax_w \doteq \sum_{i=0}^{w-1} 2_i = 2^w - 1$ ，令$w=4$，则$UMax_4 = B2U_{4}([1111])=15$ 。
 \end{itemize}
 
+\mksubsec{补码编码}
 \begin{quote}
-    \textbf{原理}：无符号数编码的唯一性 \\
-    每个介于$0 \sim 2^w - 1$的数均有一个唯一对应的$w$位编码。
+    \textbf{原理}：补码编码定义（$\doteq$ 表示左被定义为右）
+    对向量$\vec{x}=[x_{w-1},x_{w-2},\dots,x_0]$：
+    \begin{equation}
+        B2T_{w}(\vec{x})\doteq -x_{w-1}2^{w-1} + \sum_{i=0}^{w-2} x_{i}2^{i} 
+    \end{equation}
 \end{quote}
+
+最高有效位$x_{w-1}$称\texttt{符号位}，其权重为$-2^{w-1}$。该位为1时表示值为负，反之为正。\\
+
+举个例子：$B2T_{4}([1011]) = -1 \cdot 2^3 + 0 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0 = -5$ 。\\
+
+此时$w$位可表示值范围为：
+\begin{itemize}
+    \item 最小值：[10...0]，整数值为$TMin_w \doteq -2^{w-1}$。
+    \item 最大值：[01...1]，整数值为$TMax_w \doteq 2^{w-1}-1$。
+\end{itemize}
+
+值得注意的点：
+补码范围不对称：$|TMin|=|TMax|+1$。这是因为一半的符号位1的位模式表示负数，另一半符号位0的为非负数；而0也是非负数，占据了一个位置，使得能表示的整数
+比负数少一个；另外，在补码表示中-1与$UMax$有相同的位模式：[11...1]。\\
+
+\bluetxt{网络旁注：}有符号数的其它表示法
+\begin{enumerate}
+    \item \textbf{反码}(Ones' Complement)，最高有效位权为$-(2^{w-1}-1)$：\\
+        $B2O_w(\vec{x}) \doteq -x_{w-1}(2^{w-1}-1) + \sum_{i=0}^{w-2} x_{i}2^{i}$
+    \item \textbf{原码}(Sign-Magnitude)，最高有效位为符号位：\\
+        $B2S_2(\vec{x}) \doteq (-1)^{x_{w-1}} \cdot (\sum_{i=0}^{w-2} x^{i}2^{i})$
+\end{enumerate}
+
+注意补码(Two's complement)和反码(Ones' complement)的撇号位置不同。术语补码来源于：对于非负数$x$，用$2^w-x$计算$-x$的$w$位表示；而术语反码
+来源于：用$[111...1]-x$计算$-x$的反码表示。
